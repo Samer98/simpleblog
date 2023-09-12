@@ -7,7 +7,7 @@
 {% block content %}
 
 
-<h1>{{post.title}}</h1>
+    <h1>{{post.title}}</h1>
     <small> By: {{post.author}} {{post.post_date}}</small>
     {% if user.is_authenticated%}
         {% if user.id == post.author.id %}
@@ -18,11 +18,26 @@
     <br/>
     {% endif %}
 
-<hr>
-<br/>
-{{post.body}}
+    <hr>
+    <br/>
+    {{post.body|safe}}
 
-<br/><br/>
-<a href="{% url 'home'%}" class="btn btn-secondary">Back</a>
+    <br/><br/>
+    <a href="{% url 'home'%}" class="btn btn-secondary">Back</a>
+    <br/><br/>
+    {% if user.is_authenticated%}
+        <form action ="{% url 'like_post' post.pk %}" method="POST">
+            {% csrf_token %}
+            {% if liked%}
+                <button type="submit" , name = 'post_id' , value="{{ post.id }}", class ="btn btn-danger"> UnLike </button>
+            {% else %}
 
+                <button type="submit" , name = 'post_id' , value="{{ post.id }}", class ="btn btn-primary"> Like </button>
+
+            {% endif %}
+            {{total_likes}} Likes
+        </form>
+    {% else %}
+    <small>  <a href="{% url 'login'%}"> Login</a> to like </small> -------- <small> number of likes {{total_likes}}  </small>
+    {% endif %}
 {% endblock %}
