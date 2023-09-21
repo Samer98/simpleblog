@@ -16,10 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path , include
+from members.views import PasswordsChangeView ,password_success
+from django.conf import  settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('theblog.urls')),
     path('members/', include('django.contrib.auth.urls')),
     path('members/', include('members.urls')),
-]
+    path('<int:id>/password/', PasswordsChangeView.as_view(template_name='registration/change-password.html')),
+    path('password_success', password_success,name ="password_success")
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
