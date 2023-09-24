@@ -21,7 +21,14 @@ class Profile(models.Model):
 
     def __str__(self):
         return str(self.user)
+    
+    def get_absolute_url(self):
+        return reverse('home')
 class Post(models.Model):
+    STATUS_CHOICES = [
+        ("PENDING", "PENDING"),
+        ("SOLD", "SOLD"),
+    ]
     title = models.CharField(max_length=255)
     header_image = models.ImageField(null=True,blank=True,upload_to="images/")
     title_tag = models.CharField(max_length=255)
@@ -31,6 +38,7 @@ class Post(models.Model):
     post_date = models.DateField(auto_now_add=True)
     category = models.CharField(max_length=255,default='coding')
     likes = models.ManyToManyField(User,related_name="blog_posts")
+    status = models.CharField(max_length=20,choices=STATUS_CHOICES,default="PENDING")
 
     def total_likes(self):
         return self.likes.count()

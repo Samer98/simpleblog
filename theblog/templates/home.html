@@ -7,7 +7,13 @@
 <ul>
 {% for post in object_list %}
     <li><a href ="{% url 'article-detail' post.pk %}">{{post.title}} </a>
-        ----- <a href ="{% url 'category' post.category|slugify %}" >{{post.category}} </a> - {{post.author}} - {{post.post_date}}
+        ----- <a href ="{% url 'category' post.category|slugify %}" >{{post.category}} </a> - {{post.author}} - {{post.post_date}} -
+        {%if post.status == "PENDING" %}
+            <span class ="text-danger">{{post.status}}</span>
+            {% else %}
+            <span class ="text-success">{{post.status}}</span>
+
+         {% endif %}
         {% if user.is_authenticated%}
             {% if user.id == post.author.id %}
                 <a href ="{% url 'update_post' post.pk %}"> <small>(Edit)</small> </a>

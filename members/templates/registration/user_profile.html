@@ -13,8 +13,8 @@
 <div class="card mb-3" >
   <div class="row g-0">
     <div class="col-md-2">
-        {% if post.author.profile_pic%}
-         <img src="{{post.author.profile.profile_pic.url}}" class="img-fluid rounded-start" >
+        {% if page_user.profile_pic%}
+         <img src="{{page_user.profile_pic.url }}" class="img-fluid rounded-start" >
         {% else %}
         <img src="{%static 'theblog/images/default.jpg' %}" class="img-fluid rounded-start">
 
