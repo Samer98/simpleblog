@@ -29,9 +29,6 @@
     {% endif %}
     <br/>
 
-    <br/><br/>
-    <a href="{% url 'home'%}" class="btn btn-secondary">Back</a>
-    <br/><br/>
     {% if user.is_authenticated%}
         <form action ="{% url 'like_post' post.pk %}" method="POST">
             {% csrf_token %}
@@ -47,6 +44,18 @@
     {% else %}
     <small>  <a href="{% url 'login'%}"> Login</a> to like </small> -------- <small> number of likes {{total_likes}}  </small>
     {% endif %}
+<h2>Comments...</h2>
+{% if not post.comments.all %}
+    No Comments Yet <a href="#" >Add one</a>
+{% else %}
+    {% for comment in post.comments.all %}
+    <strong>{{comment.name}} - {{comment.date_added}}</strong>
+    <br>
+    {{comment.body}}
+    <br>
+    {% endfor %}
+  
+{% endif %}
 
 <br/><br/>
 <div class="card mb-3" >
