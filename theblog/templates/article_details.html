@@ -33,10 +33,10 @@
         <form action ="{% url 'like_post' post.pk %}" method="POST">
             {% csrf_token %}
             {% if liked%}
-                <button type="submit" , name = 'post_id' , value="{{ post.id }}", class ="btn btn-danger"> UnLike </button>
+                <button type="submit"  name = 'post_id'  value="{{ post.id }}" class ="btn btn-danger"> UnLike </button>
             {% else %}
 
-                <button type="submit" , name = 'post_id' , value="{{ post.id }}", class ="btn btn-primary"> Like </button>
+                <button type="submit" name = 'post_id'  value="{{ post.id }}" class ="btn btn-primary"> Like </button>
 
             {% endif %}
             {{total_likes}} Likes
@@ -44,20 +44,27 @@
     {% else %}
     <small>  <a href="{% url 'login'%}"> Login</a> to like </small> -------- <small> number of likes {{total_likes}}  </small>
     {% endif %}
+<hr>
+
 <h2>Comments...</h2>
-{% if not post.comments.all %}
-    No Comments Yet <a href="{% url 'add_comment' post.pk %}" >Add Comment</a>
-{% else %}
-  <a href="{% url 'add_comment' post.pk %}" >Add Comment</a>
-  <br/><br/>
-    {% for comment in post.comments.all %}
+  <br/>
+    {% for comment in comments %}
     <strong>{{comment.name}} - {{comment.date_added}}</strong>
     <br>
-    {{comment.body}}
+    {{comment.comment}}
     <br>
     {% endfor %}
-  
-{% endif %}
+<hr>
+<br/>
+
+    <div class = "form-group" >
+    <form method="POST" enctype ="multipart/form-data">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+        <button class="btn btn-secondary">Add comment</button>
+    </form>
+    </div>
 
 <br/><br/>
 <div class="card mb-3" >
@@ -73,11 +80,16 @@
     <div class="col-md-10">
       <div class="card-body">
         <h5 class="card-title">
-            <a href="{% url 'show_profile_page' post.author.profile.id %}">{{post.author}} </a></h5>
-          <p class ="small text-muted">
-              <a href="{{post.author.profile.facebook_url}}"> Facebook </a>
+            {% if post.author.profile.id %}
+                <a href="{% url 'show_profile_page' post.author.profile.id %}">{{post.author}} </a></h5>
+                <p class ="small text-muted">
+                <a href="{{post.author.profile.facebook_url}}"> Facebook </a>
+                <p class="card-text">{{post.author.profile.bio}}</p>
+
+              {% else %}
+          <h5>{{post.author}} </h5>
+          {% endif %}
           </p>
-        <p class="card-text">{{post.author.profile.bio}}</p>
 
       </div>
     </div>

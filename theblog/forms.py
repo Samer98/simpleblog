@@ -39,8 +39,7 @@ class EditPostForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('name','body')
+        fields = ('comment',)
 
         widgets = {
-            'name': forms.TextInput(attrs={'class':'form-control'}),
-            'body': forms.Textarea(attrs={'class': 'form-control'}),}
+            'comment': forms.Textarea(attrs={'class': 'form-control'}),}

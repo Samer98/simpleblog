@@ -36,26 +36,36 @@ def CategoryListView(request):
     cat_menu_list = Category.objects.all()
     return render(request,'category_list.html',{'cat_menu_list':cat_menu_list})
 
-class ArticleDetailView(DetailView):
+class ArticleDetailView(DetailView,CreateView):
     model = Post
     template_name = 'article_details.html'
+    form_class = CommentForm
 
-    # def get_context_data(self, *args, **kwargs):
-    #     cat_menu = Category.objects.all()
-    #     context = super(ArticleDetailView,self).get_context_data(*args, **kwargs)
-    #     context["cat_menu"] = cat_menu
-    #     return context
+    def form_valid(self, form):
+        form.instance.post_id = self.kwargs['pk']
+        if self.request.user.username == "":
+            form.instance.name = "Guest"
+        else:
+            form.instance.name = self.request.user.username
+        return super().form_valid(form)
+
     def get_context_data(self, *args, **kwargs):
         context = super(ArticleDetailView, self).get_context_data(*args, **kwargs)
         stuff = get_object_or_404(Post,id=self.kwargs['pk'])
+
         total_likes = stuff.total_likes()
         liked = False
         if stuff.likes.filter(id=self.request.user.id).exists():
             liked = True
         context["total_likes"] = total_likes
         context['liked'] = liked
+        context['comments'] = stuff.comments.all().order_by('-date_added')
+
         return context
 
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy("article-detail", kwargs={'pk': pk})
 
 
 
@@ -69,13 +79,18 @@ class AddCommentView(CreateView):
     model = Comment
     template_name = 'add_comment.html'
     form_class = CommentForm
-    success_url =  reverse_lazy('home')
 
     def form_valid(self,form):
         form.instance.post_id = self.kwargs['pk']
+        if self.request.user.username == "":
+            form.instance.name = "Guest"
+        else:
+            form.instance.name = self.request.user.username
         return super().form_valid(form)
 
-    # fields = '__all__'
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy("article-detail", kwargs={'pk': pk})
 
 
 class AddCategoryView(CreateView):
@@ -86,7 +101,8 @@ class AddCategoryView(CreateView):
 
 def CategoryView(request,cats):
     category_post = Post.objects.filter(category=cats.replace('-',' '))
-    return render(request,'categories.html',{'cats':cats.title().replace('-',' '),'category_posts':category_post})
+    category = cats.title().replace('-',' ')
+    return render(request,'categories.html',{'cats':category,'category_posts':category_post})
 
 class UpdatePostView(UpdateView):
     model = Post
