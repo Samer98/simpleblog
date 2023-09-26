@@ -4,6 +4,7 @@ from .models import Post, Category, Comment, Message
 from .forms import PostForm, EditPostForm, CommentForm, SendMessageForm
 from django.urls import reverse_lazy , reverse
 from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
 # Create your views here.
 
 # def home(request):
@@ -100,15 +101,23 @@ class SendMessageView(CreateView):
     form_class = SendMessageForm
 
     def form_valid(self, form):
-        print(Post.objects.filter(id=self.kwargs['pk'])[0].author)
+        # print(Post.objects.filter(id=self.kwargs['pk'])[0].author)
         form.instance.receiver_name=Post.objects.filter(id=self.kwargs['pk'])[0].author
         form.instance.sender_name = self.request.user
+        # print(get_object_or_404(User,username='samer'))
+        receiver = get_object_or_404(User,username=form.instance.receiver_name)
+        receiver.profile.has_new_messages = True
+        receiver.profile.save()
+
         return super().form_valid(form)
     def get_success_url(self):
         pk = self.kwargs['pk']
         return reverse_lazy("article-detail", kwargs={'pk': pk})
 def MessageView(request,pk):
     messages = Message.objects.filter(receiver_name_id=pk)
+    receiver = get_object_or_404(User, username=messages[0].receiver_name)
+    receiver.profile.has_new_messages = False
+    receiver.profile.save()
     print(messages)
     return render(request,'message_detail.html',{'messages':messages,'receiver_id':pk})
 # class MessageView(DetailView):

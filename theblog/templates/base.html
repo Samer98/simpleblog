@@ -62,10 +62,15 @@
                           <a class="nav-link dropdown-toggle" href="#" id="EditProfileDropDown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                               Profile
                           </a>
-
+                     {% if user.profile.has_new_messages %}
                       <li class="nav-item ms-0">
+                          <a href="{% url 'message_detail' user.id %}"> <img src="{% static 'theblog/images/message.png' %}" class="img-fluid rounded-start" width="40" height="40" ></a>
+                      </li>
+                    {% else %}
+                        <li class="nav-item ms-0">
                           <a href="{% url 'message_detail' user.id %}"> <img src="{% static 'theblog/images/no message.png' %}" class="img-fluid rounded-start" width="40" height="40" ></a>
                       </li>
+                    {% endif %}
 
                     {% if user.profile.profile_pic %}
 
