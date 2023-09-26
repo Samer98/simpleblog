@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  {% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  {% if user.id == receiver_id %}
+    {% if messages %}
+        {% for message in messages %}
+          The sender -{{message.sender_name}} at  {{message.date_added}} <br>
+          The message {{message.message}}
+        <hr>
+        {% endfor %}
+    {% else %}
+      You have no messages right now
+    {% endif %}
+  {% else %}
+        You have no access here
+  {% endif %}
+{% else %}
+  Login to have access to this page
+{% endif %}
+
+
+
+
+{% endblock %}

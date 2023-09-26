@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
-from .models import Post , Category , Comment
-from .forms import PostForm , EditPostForm,CommentForm
+from .models import Post, Category, Comment, Message
+from .forms import PostForm, EditPostForm, CommentForm, SendMessageForm
 from django.urls import reverse_lazy , reverse
 from django.http import HttpResponseRedirect
 # Create your views here.
@@ -35,6 +35,8 @@ class HomeView(ListView):
 def CategoryListView(request):
     cat_menu_list = Category.objects.all()
     return render(request,'category_list.html',{'cat_menu_list':cat_menu_list})
+
+
 
 class ArticleDetailView(DetailView,CreateView):
     model = Post
@@ -92,6 +94,33 @@ class AddCommentView(CreateView):
         pk = self.kwargs['pk']
         return reverse_lazy("article-detail", kwargs={'pk': pk})
 
+class SendMessageView(CreateView):
+    model = Message
+    template_name = 'send_message.html'
+    form_class = SendMessageForm
+
+    def form_valid(self, form):
+        print(Post.objects.filter(id=self.kwargs['pk'])[0].author)
+        form.instance.receiver_name=Post.objects.filter(id=self.kwargs['pk'])[0].author
+        form.instance.sender_name = self.request.user
+        return super().form_valid(form)
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy("article-detail", kwargs={'pk': pk})
+def MessageView(request,pk):
+    messages = Message.objects.filter(receiver_name_id=pk)
+    print(messages)
+    return render(request,'message_detail.html',{'messages':messages,'receiver_id':pk})
+# class MessageView(DetailView):
+#     model = Message
+#     template_name = 'message_detail.html'
+#
+#     def get_context_data(self, *args, **kwargs):
+#         message = Message.objects.filter(id=2)
+#         context = super(MessageView, self).get_context_data(*args, **kwargs)
+#
+#         context["message"] = message
+#         return context
 
 class AddCategoryView(CreateView):
     model = Category
@@ -101,9 +130,6 @@ class AddCategoryView(CreateView):
 
 def CategoryView(request,cats):
     category_post = Post.objects.filter(category=cats.title().replace('-',' '))
-    # cats="Party game"
-    # print(cats.replace(' ','-'))
-    # print(category_post)
     category = cats.title().replace('-',' ')
     return render(request,'categories.html',{'cats':category,'category_posts':category_post})
 

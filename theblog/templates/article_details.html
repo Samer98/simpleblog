@@ -41,6 +41,9 @@
             {% endif %}
             {{total_likes}} Likes
         </form>
+                <a href ="{% url 'send_message' post.pk %}"  class ="btn btn-danger"> send message </a>
+
+        </form>
     {% else %}
     <small>  <a href="{% url 'login'%}"> Login</a> to like </small> -------- <small> number of likes {{total_likes}}  </small>
     {% endif %}

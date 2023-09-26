@@ -63,7 +63,12 @@
                               Profile
                           </a>
 
+                      <li class="nav-item ms-0">
+                          <a href="{% url 'message_detail' user.id %}"> <img src="{% static 'theblog/images/no message.png' %}" class="img-fluid rounded-start" width="40" height="40" ></a>
+                      </li>
+
                     {% if user.profile.profile_pic %}
+
                       <li class="nav-item ms-auto">
                           <img src="{{ user.profile.profile_pic.url }}" class="img-fluid rounded-start" width="40" height="40"></a>
                       </li>
