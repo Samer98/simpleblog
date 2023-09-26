@@ -27,7 +27,7 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-          <a class="navbar-brand" href="{% url 'home' %}">My Freakin Awesome Blog!</a>
+          <a class="navbar-brand" href="{% url 'home' %}">NewGame MarketPlace</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
           </button>
@@ -51,6 +51,7 @@
                           <a class="nav-link" href="{% url 'category-list' %}">Category List</a>
                       </li>
                   {% endif %}
+
                   {% if user.is_authenticated %}
                       <li class="nav-item">
                           <a class="nav-link" href="{% url 'add_post' %}">Add Post</a>
@@ -62,27 +63,7 @@
                           <a class="nav-link dropdown-toggle" href="#" id="EditProfileDropDown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                               Profile
                           </a>
-                     {% if user.profile.has_new_messages %}
-                      <li class="nav-item ms-0">
-                          <a href="{% url 'message_detail' user.id %}"> <img src="{% static 'theblog/images/message.png' %}" class="img-fluid rounded-start" width="40" height="40" ></a>
-                      </li>
-                    {% else %}
-                        <li class="nav-item ms-0">
-                          <a href="{% url 'message_detail' user.id %}"> <img src="{% static 'theblog/images/no message.png' %}" class="img-fluid rounded-start" width="40" height="40" ></a>
-                      </li>
-                    {% endif %}
-
-                    {% if user.profile.profile_pic %}
-
-                      <li class="nav-item ms-auto">
-                          <img src="{{ user.profile.profile_pic.url }}" class="img-fluid rounded-start" width="40" height="40"></a>
-                      </li>
-                    {% else %}
-                      <li class="nav-item ms-auto">
-                          <img src="{% static 'theblog/images/default.jpg' %}" class="img-fluid rounded-start" width="40" height="40"></a>
-                      </li>
-                    {% endif %}
-                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
                             <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Setting</a></li>
 
                               {% if user.profile.id %}
@@ -94,9 +75,30 @@
                               {% endif %}
                           </ul>
                       </li>
+                  {% if user.profile.has_new_messages %}
+                      <li class="nav-item ms-0">
+                          <a href="{% url 'message_detail' user.id %}"> <img src="{% static 'theblog/images/message.png' %}" class="img-fluid rounded-start" width="40" height="40" ></a>
+                      </li>
+                    {% else %}
+                        <li class="nav-item ms-0">
+                          <a href="{% url 'message_detail' user.id %}"> <img src="{% static 'theblog/images/no message.png' %}" class="img-fluid rounded-start" width="40" height="40" ></a>
+                      </li>
+                    {% endif %}
+
+                  {% if user.profile.profile_pic %}
+
+                      <li class="nav-item ms-auto">
+                          <img src="{{ user.profile.profile_pic.url }}" class="img-fluid rounded-start" width="40" height="40"></a>
+                      </li>
+                    {% else %}
+                      <li class="nav-item ms-auto">
+                          <img src="{% static 'theblog/images/default.jpg' %}" class="img-fluid rounded-start" width="40" height="40"></a>
+                      </li>
+                    {% endif %}
                       <li class="nav-item">
                           <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                       </li>
+
                   {% else %}
                       <li class="nav-item">
                           <a class="nav-link" href="{% url 'register' %}">Register</a>

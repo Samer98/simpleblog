@@ -114,11 +114,15 @@ class SendMessageView(CreateView):
         pk = self.kwargs['pk']
         return reverse_lazy("article-detail", kwargs={'pk': pk})
 def MessageView(request,pk):
-    messages = Message.objects.filter(receiver_name_id=pk)
-    receiver = get_object_or_404(User, username=messages[0].receiver_name)
-    receiver.profile.has_new_messages = False
-    receiver.profile.save()
-    print(messages)
+
+    messages = Message.objects.filter(receiver_name_id=pk).order_by('-date_added')
+    try:
+        receiver = get_object_or_404(User, username=messages[0].receiver_name)
+        receiver.profile.has_new_messages = False
+        receiver.profile.save()
+    except:
+        pass
+
     return render(request,'message_detail.html',{'messages':messages,'receiver_id':pk})
 # class MessageView(DetailView):
 #     model = Message

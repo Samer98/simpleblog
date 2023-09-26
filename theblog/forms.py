@@ -50,4 +50,4 @@ class SendMessageForm(forms.ModelForm):
         fields = ('message',)
 
         widgets = {
-            'message': forms.Textarea(attrs={'class': 'form-control'}),}
+            'message': forms.Textarea(attrs={'class': 'form-control','placeholder':"Write your phone Number for better communcation"}),}

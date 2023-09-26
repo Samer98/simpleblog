@@ -30,6 +30,8 @@
     <br/>
 
     {% if user.is_authenticated%}
+
+
         <form action ="{% url 'like_post' post.pk %}" method="POST">
             {% csrf_token %}
             {% if liked%}
@@ -41,9 +43,7 @@
             {% endif %}
             {{total_likes}} Likes
         </form>
-                <a href ="{% url 'send_message' post.pk %}"  class ="btn btn-danger"> send message </a>
-
-        </form>
+        <a href ="{% url 'send_message' post.pk %}"  class ="btn btn-danger"> send message </a>
     {% else %}
     <small>  <a href="{% url 'login'%}"> Login</a> to like </small> -------- <small> number of likes {{total_likes}}  </small>
     {% endif %}
@@ -57,7 +57,6 @@
     {{comment.comment}}
     <br>
     {% endfor %}
-<hr>
 <br/>
 
     <div class = "form-group" >
